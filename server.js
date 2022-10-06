@@ -1,4 +1,7 @@
+//Require Express.js
 const express = require('express');
+
+//Requiring the data
 const { animals } = require('./data/animals.json');
 
 /*
@@ -71,6 +74,10 @@ to query by only one personality trait, like personalityTraits=rash, then
 req.query.personalityTraits would be the string rash.
 */
 
+function findById(id, animalsArray) {
+  const result = animalsArray.filter(animal => animal.id === id)[0];
+  return result;
+}
 
 /*
 The get() method requires two arguments. The first is a string that
@@ -90,6 +97,24 @@ app.get('/api/animals', (req, res) => {
   }
   console.log(req.query);
   res.json(results);
+});
+
+/*
+The req object gives us access to the req.params property. Sometimes, we
+only want one specific animal, rather than an array of all the animals
+that match a query and for that purpose we user the req.params object.
+Unlike the query object, the params object needs to be defined in the
+route path, with <route>/:<parameterName>.
+*/
+app.get('/api/animals/:id', (request, response) => {
+  const result =findById(request.params.id, animals);
+  if (result) {
+    response.json(result);
+  } else {
+    //The 404 status code is meant to communicate to the client that the
+    //requested resource could not be found
+    response.send(404);
+  }
 });
 
 //http://localhost:3001/api/animals?name=Erica&&name=Spindle&&species=bear&diet=omnivore
