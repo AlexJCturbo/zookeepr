@@ -2,6 +2,13 @@ const express = require('express');
 const { animals } = require('./data/animals.json');
 
 /*
+When Heroku runs our app, it sets an environment variable called
+process.env.PORT. We're going to tell our app to use that port, if it
+has been set, and if not, default to port 3001.
+*/
+const PORT = process.env.PORT || 3001;
+
+/*
 Instantiate the server
 We assign express() to the app variable so that we can later chain on
 methods to the Express.js server
@@ -106,6 +113,6 @@ numbers can range from 1024 to 49151! We chose a number around 3000 because
 it is common practice and fairly easy to remember.
 */
 
-app.listen(3001, () => {
-  console.log(`API server now on port 3001!`);
+app.listen(PORT, () => {
+  console.log(`API server now on port ${PORT}!`);
 });
