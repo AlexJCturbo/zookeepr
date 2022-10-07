@@ -1,6 +1,16 @@
 //Require Express.js
 const express = require('express');
 
+const fs = require('fs');
+
+/*
+The path module built into the Node.js API that provides utilities for
+working with file and directory paths. It ultimately makes working with
+our file system a little more predictable, especially when we work with
+production environments such as Heroku.
+*/
+const path = require('path');
+
 //Requiring the data
 const { animals } = require('./data/animals.json');
 
@@ -17,6 +27,38 @@ We assign express() to the app variable so that we can later chain on
 methods to the Express.js server
 */
 const app = express();
+
+/*
+The app.use() is a method executed by our Express.js server that mounts
+a function to the server that our requests will pass through before
+getting to the intended endpoint. The functions we can mount to our
+server are referred to as middleware.
+
+We needed to parse (or convert) the response data to JSON format before
+we could interface with it.
+*/
+//parse incoming string or array data
+app.use(express.urlencoded({ extended: true }));
+//parse incoming JSON data
+app.use(express.json());
+
+/*
+Middleware functions can serve many different purposes. Ultimately they
+allow us to keep our route endpoint callback functions more readable
+while letting us reuse functionality across routes to keep our code DRY.
+
+express.urlencoded({extended: true}) method is a method built into
+Express.js. It takes incoming POST data and converts it to key/value
+pairings that can be accessed in the req.body object. The extended:
+true option set inside the method call informs our server that there
+may be sub-array data nested in it as well, so it needs to look as deep
+into the POST data as possible to parse all of the data correctly.
+
+The express.json() method we used takes incoming POST data in the form
+of JSON and parses it into the req.body JavaScript object. Both of the
+above middleware functions need to be set up every time you create a
+server that's looking to accept POST data.
+*/
 
 /*
 To create this query, we'll add another function called filterByQuery().
@@ -79,7 +121,59 @@ function findById(id, animalsArray) {
   return result;
 }
 
+
 /*
+Here, we just created a function that accepts the POST route's req.body
+value and the array we want to add the data to. In this case, that array
+will be the animalsArray, because the function is for adding a new animal
+to the catalog.
+*/
+function createNewAnimal (body, animalsArray) {
+  console.log(body);
+
+  const animal = body;
+  animalsArray.push(animal);
+  fs.writeFileSync(
+    //We want to write to our animals.json file in the data subdirectory, so
+    //we use the method path.join() to join the value of __dirname, which
+    //represents the directory of the file we execute the code in, with the
+    //path to the animals.json file.
+    path.join(__dirname, './data/animals.json'),
+
+    //We need to save the JavaScript array data as JSON, so we use JSON.stringify()
+    //to convert it. The other two arguments used in the method, null and 2,
+    //are means of keeping our data formatted. The null argument means we
+    //don't want to edit any of our existing data; if we did, we could pass
+    //something in there. The 2 indicates we want to create white space
+    //between our values to make it more readable. If we were to leave those
+    //two arguments out, the entire animals.json file would work, but it
+    //would be really hard to read.
+    JSON.stringify({ animals: animalsArray }, null, 2)
+  );
+
+  // return finished code to post route for response
+  return animal;
+}
+
+//Function to validate the data from body
+function validateAnimal(animal) {
+  if (!animal.name || typeof animal.name !== 'string') {
+    return false;
+  }
+  if (!animal.species || typeof animal.species !== 'string') {
+    return false;
+  }
+  if (!animal.diet || typeof animal.diet !== 'string') {
+    return false;
+  }
+  if (!animal.personalityTraits || !Array.isArray(animal.personalityTraits)) {
+    return false;
+  }
+  return true;
+}
+
+/*
+GET requests
 The get() method requires two arguments. The first is a string that
 describes the route the client will have to fetch from. The second is a
 callback function that will execute every time that route is accessed
@@ -137,6 +231,56 @@ chose to run on a port that is less restricted. In this instance, we chose
 numbers can range from 1024 to 49151! We chose a number around 3000 because
 it is common practice and fairly easy to remember.
 */
+
+/*
+POST requests
+Notice the route name, /api/animals. Aren't we already using that for a
+GET request? How does it know which route to use when a request is made?
+It'll know because of how we form the request.
+
+We're going to have to instruct Express.js on how to handle incoming data
+and set something up known as middleware.
+
+In order for our server to accept incoming data the way we need it to,
+we need to tell our Express.js app to intercept our POST request before
+it gets to the callback function. At that point, the data will be run
+through a couple of functions to take the raw data transferred over
+HTTP and convert it to a JSON object.
+*/
+
+/*
+Keep in mind that whenever we use require() to import data or functionality,
+it's only reading the data and creating a copy of it to use in server.js
+*/
+app.post('/api/animals', (req, res) => {
+  //req.body is where our incoming content will be
+  //console.log(req.body);
+  
+  //Set id based on what the next index of the array will be
+  req.body.id = animals.length.toString();
+
+  /*
+  In our POST route's callback before we create the data and add it to the
+  catalog, we'll pass our data through this validation function. In this case,
+  the animal parameter is going to be the content from req.body, and we're
+  going to run its properties through a series of validation checks. If any
+  of them are false, we will return false and not create the animal data.
+  */
+  //If any data in req.body is incorrect, send 400 error back
+  if (!validateAnimal(req.body)) {
+
+    //The res.status().send(); is a response method to relay a message to
+    //the client making the request. We send them an HTTP status code and a
+    //message explaining what went wrong.
+    res.status(400).send('The animal is not properly formatted.');
+  } else {
+    //Add animal to json file and animals array in this function
+    const animal = createNewAnimal(req.body, animals);
+
+    //Converts response to JSON format
+    res.json(req.body);
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`API server now on port ${PORT}!`);
