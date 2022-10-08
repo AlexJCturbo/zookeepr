@@ -42,6 +42,16 @@ app.use(express.urlencoded({ extended: true }));
 //parse incoming JSON data
 app.use(express.json());
 
+//Set up Express.js middleware that instructs the server to make certain files readily
+//available
+app.use(express.static('public'));
+/*
+The way it works is that we provide a file path to a location in our application (in
+this case, the public folder) and instruct the server to make these files static
+resources. This means that all of our front-end code can now be accessed without
+having a specific server endpoint created for it!
+*/
+
 /*
 Middleware functions can serve many different purposes. Ultimately they
 allow us to keep our route endpoint callback functions more readable
@@ -280,6 +290,47 @@ app.post('/api/animals', (req, res) => {
     //Converts response to JSON format
     res.json(req.body);
   }
+});
+
+
+/*
+We can assume that a route that has the term api in it will deal in transference of
+JSON data, whereas a more normal-looking endpoint such as /animals should serve an
+HTML page.
+*/
+//This route will take us to /animals
+//The endpoint here is just /animals
+app.get('/animals', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/animals.html'));
+});
+/*
+So far we've only used routes that have actual names like /api/animals, so where does
+the / route points us to? It brings us to the root route of the server! This is the
+route used to create a homepage for a server.
+*/
+
+
+//This route will take us to /zookepers
+app.get('/zookepers', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/zookepers.html'));
+});
+
+
+//Wildcard Routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+/*
+The order of your routes matters! The * route should always come last. Otherwise, it
+will take precedence over named routes.
+*/
+
+//Getting index.html to be served from our Express.js server
+app.get('/', function (req, res) {
+  //this GET route has just one job to do, and that is to respond with an HTML page
+  //to display in the browser. So instead of using res.json(), we're using
+  //res.sendFile() by telling where to find the file we want our server to read.
+  res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
 app.listen(PORT, () => {

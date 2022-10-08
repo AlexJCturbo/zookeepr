@@ -108,6 +108,16 @@
         "hungry, goofy"
       ],
       "id": "10"
+    },
+    {
+      "name": "Toby",
+      "species": "Doggo",
+      "diet": "omnivore",
+      "personalityTraits": [
+        "zany",
+        "loving"
+      ],
+      "id": "11"
     }
   ]
 }
