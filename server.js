@@ -1,9 +1,10 @@
+//The require() statements will read the index.js files in each of the directories indicated.
+const apiRoutes = require('./routes/apiRoutes');
+const htmlRoutes = require('./routes/htmlRoutes');
+
 //Require Express.js
 const express = require('express');
 const path = require('path');
-
-//Requiring the data
-const { animals } = require('./data/animals.json');
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -13,30 +14,16 @@ app.use(express.urlencoded({ extended: true }));
 //parse incoming JSON data
 app.use(express.json());
 
+app.use('/api', apiRoutes);
+app.use('/', htmlRoutes);
+/*
+This is our way of telling the server that any time a client navigates to
+<ourhost>/api, the app will use the router we set up in apiRoutes. If / is
+the endpoint, then the router will serve back our HTML routes.
+*/
+
 //available (like css and js files in this case)
 app.use(express.static('public'));
-
-
-//This route will take us to /animals
-//The endpoint here is just /animals
-app.get('/animals', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/animals.html'));
-});
-
-//This route will take us to /zookepers
-app.get('/zookepers', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/zookepers.html'));
-});
-
-//Wildcard Routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './public/index.html'));
-});
-
-//Getting index.html to be served from our Express.js server
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, './public/index.html'));
-});
 
 app.listen(PORT, () => {
   console.log(`API server now on port ${PORT}!`);

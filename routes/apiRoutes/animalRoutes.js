@@ -1,7 +1,6 @@
 const router = require('express').Router();
-const {animals} = require('../../data/animals.json');
+const { animals } = require('../../data/animals');
 const { filterByQuery, findById, createNewAnimal, validateAnimal } = require('../../lib/animals');
-
 
 //Route handler for GET request
 router.get('/animals', (req, res) => {
@@ -13,17 +12,15 @@ router.get('/animals', (req, res) => {
   res.json(results);
 });
 
-
-router.get('/animals/:id', (request, response) => {
-  const result = findById(request.params.id, animals);
+router.get('/animals/:id', (req, res) => {
+  const result = findById(req.params.id, animals);
   if (result) {
-    response.json(result);
+    res.json(result);
   } else {
     //The 404 status code means that the requested resource could not be found
-    response.send(404);
+    res.send(404);
   }
 });
-
 
 router.post('/animals', (req, res) => {
   //Set id based on what the next index of the array will be
