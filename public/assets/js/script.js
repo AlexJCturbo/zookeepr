@@ -1,5 +1,8 @@
 const $animalForm = document.querySelector('#animal-form');
+const $zookeeperForm = document.querySelector('#zookeeper-form');
 
+
+//Get animal data from the HTML form and organize it
 const handleAnimalFormSubmit = event => {
   event.preventDefault();
 
@@ -27,7 +30,7 @@ const handleAnimalFormSubmit = event => {
   const animalObject = { name, species, diet, personalityTraits };
 
   //Using Fetch API to POST Data
-  fetch('/api/animals', {
+  fetch('api/animals', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -45,6 +48,7 @@ const handleAnimalFormSubmit = event => {
       console.log(postResponse);
       alert('Thank you for adding an animal!');
     });
+};
 /*
 Did you notice that the URL we provide is simply /api/animals? Because the
 request is coming from the server, we don't have to specify the full URL.
@@ -53,7 +57,40 @@ except that now it's being done through a fetch() call!
 Now, when we submit a new animal through the form, we collect all the input
 data into an object and use fetch() to POST our data to the server.
 */
+$animalForm.addEventListener('submit', handleAnimalFormSubmit);
 
+
+//Get zoopeker data from the HTML form and organize it
+const handleZookeeperFormSubmit = event => {
+  event.preventDefault();
+
+  // get zookeeper data and organize it
+  const name = $zookeeperForm.querySelector('[name="zookeeper-name"]').value;
+  const age = parseInt($zookeeperForm.querySelector('[name="age"]').value);
+  const favoriteAnimal = $zookeeperForm.querySelector('[name="favorite-animal"]').value;
+
+  const zookeeperObj = { name, age, favoriteAnimal };
+  console.log(zookeeperObj);
+  fetch('api/zookeepers', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(zookeeperObj)
+  })
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      alert('Error: ' + response.statusText);
+    })
+    .then(postResponse => {
+      console.log(postResponse);
+      alert('Thank you for adding a zookeeper!');
+    });
 };
 
-$animalForm.addEventListener('submit', handleAnimalFormSubmit);
+$zookeeperForm.addEventListener('submit', handleZookeeperFormSubmit);
+
+

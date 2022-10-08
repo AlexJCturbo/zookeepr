@@ -1,6 +1,6 @@
 const router = require('express').Router();
-const { animals } = require('../../data/animals');
 const { filterByQuery, findById, createNewAnimal, validateAnimal } = require('../../lib/animals');
+const { animals } = require('../../data/animals.json');
 
 //Route handler for GET request
 router.get('/animals', (req, res) => {

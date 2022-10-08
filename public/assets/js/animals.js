@@ -40,7 +40,7 @@ const getAnimals = (formData = {}) => {
 
   //Using fetch() to make a GET request
   fetch(queryUrl)
-  .then(response => {
+    .then(response => {
     /*when using fetch() we have to check to see if the ok property in the response is
     true or false. This is the part that will check for any HTTP status code the
     signifies an error.*/
