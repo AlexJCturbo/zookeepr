@@ -14,9 +14,9 @@
 - [Links](#Links)
 
 ## Project Description
-The onjective of the project is to create a web server using the Express.js framework and add it to a zoo front-end application.
+The objective of the project is to create a web server using the Express.js framework and add it to a zoo front-end application.
 
-To achive that, this project uses Express.js to provide the framework for the different routes required in the project.
+To achieve that, this project uses Express.js to provide the framework for the different routes required in the project.
 ###### [Back to Index](#Table-of-Contents)
 
 
@@ -26,29 +26,28 @@ To run the project, the user must install Node.js, Jest for testing, Express.js 
 
 
 ## Usage
-To run this app all the applications previously described have to be installed in the directory of the project. CLone this repository and in the terminal, from the root of the project run:
+To run this app all the applications previously described have to be installed in the directory of the project. Clone this repository and in the terminal, from the root of the project run:
 
 ```
 $ npm init
 $ npm i express
 $ npm start
 ```
-
 By doing it, the user will become a local server that will allow running the application.
 ###### [Back to Index](#Table-of-Contents)
 	
 
 ## Test Instructions
-Install the dependencies in your computer: Node.js, Jest and Insomnia. Execute from the terminal the tests for the data files using Jest by typing:
+Install the dependencies on your computer: Node.js, Jest and Insomnia. Execute from the terminal the tests for the data files using Jest by typing:
 ```
 $ npm run test
 ```
-Install and run insomnia. Add a GET and a POST HTTP requests using the URL http://localhost:3001. In the browser, you can also verify the web page is loading using the same URL http://localhost:3001/api/animals/ and also checking the animals and zookepers pages.
+Install and run insomnia. Add a GET and a POST HTTP request using the URL http://localhost:3001. In the browser, you can also verify the web page is loading using the same URL http://localhost:3001/api/animals/ and also check the animals and zookeepers pages.
 ###### [Back to Index](#Table-of-Contents)
 	
 
 ## Questions
-Please, fee free to get in touch with me at jaimes.ac.5@gmail.com to discuss any inquiries or suggestions for the project. I will be happy to connect with you!
+Please, feel free to get in touch with me at jaimes.ac.5@gmail.com to discuss any inquiries or suggestions for the project. I will be happy to connect with you!
 ###### [Back to Index](#Table-of-Contents)
 	
 
