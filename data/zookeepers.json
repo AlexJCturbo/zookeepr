@@ -71,6 +71,12 @@
       "age": 18,
       "favoriteAnimal": "Tiger",
       "id": "11"
+    },
+    {
+      "name": "Bob",
+      "age": 41,
+      "favoriteAnimal": "Eagle",
+      "id": "12"
     }
   ]
 }

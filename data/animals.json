@@ -118,6 +118,17 @@
         "loving"
       ],
       "id": "11"
+    },
+    {
+      "name": "Nacho",
+      "species": "Panda",
+      "diet": "herbivore",
+      "personalityTraits": [
+        "hungry",
+        "zany",
+        "goofy"
+      ],
+      "id": "12"
     }
   ]
 }
